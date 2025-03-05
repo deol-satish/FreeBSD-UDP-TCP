@@ -1,0 +1,24 @@
+Statistics for CUBIC: 
+Median: 85.312
+Mean: 92.72971075522314
+25th Percentile: 66.875
+75th Percentile: 109.687
+Minimum: 26.25
+Maximum: 309.062
+
+Statistics for NEWRENO: 
+Median: 84.062
+Mean: 92.16016792798534
+25th Percentile: 65.937
+75th Percentile: 109.687
+Minimum: 14.062
+Maximum: 364.062
+
+Statistics for DCTCP: 
+Median: 65.625
+Mean: 72.60979652351739
+25th Percentile: 52.5
+75th Percentile: 85.0
+Minimum: 19.687
+Maximum: 321.562
+

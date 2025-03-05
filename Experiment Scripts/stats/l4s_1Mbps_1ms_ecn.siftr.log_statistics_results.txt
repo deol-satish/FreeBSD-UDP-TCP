@@ -1,0 +1,104 @@
+Statistics for TCP Stream 4:
+Median: 474.062
+Mean: 464.157725984252
+25th Percentile: 399.375
+75th Percentile: 553.281
+Minimum: 178.437
+Maximum: 761.25
+
+Statistics for TCP Stream 1:
+Median: 435.312
+Mean: 439.546836627141
+25th Percentile: 332.656
+75th Percentile: 528.75
+Minimum: 191.875
+Maximum: 819.687
+
+Statistics for TCP Stream 2:
+Median: 471.562
+Mean: 481.81909484193005
+25th Percentile: 396.875
+75th Percentile: 552.5
+Minimum: 251.25
+Maximum: 790.0
+
+Statistics for TCP Stream 3:
+Median: 457.031
+Mean: 456.79614006024093
+25th Percentile: 398.437
+75th Percentile: 518.0465
+Minimum: 211.25
+Maximum: 700.937
+
+Statistics for TCP Stream 4:
+Median: 474.062
+Mean: 464.157725984252
+25th Percentile: 399.375
+75th Percentile: 553.281
+Minimum: 178.437
+Maximum: 761.25
+
+Statistics for TCP Stream 1:
+Median: 435.312
+Mean: 439.546836627141
+25th Percentile: 332.656
+75th Percentile: 528.75
+Minimum: 191.875
+Maximum: 819.687
+
+Statistics for TCP Stream 2:
+Median: 471.562
+Mean: 481.81909484193005
+25th Percentile: 396.875
+75th Percentile: 552.5
+Minimum: 251.25
+Maximum: 790.0
+
+Statistics for TCP Stream 3:
+Median: 457.031
+Mean: 456.79614006024093
+25th Percentile: 398.437
+75th Percentile: 518.0465
+Minimum: 211.25
+Maximum: 700.937
+
+Statistics for TCP Stream 4:
+Median: 474.062
+Mean: 464.157725984252
+25th Percentile: 399.375
+75th Percentile: 553.281
+Minimum: 178.437
+Maximum: 761.25
+
+Statistics for TCP Stream 1:
+Median: 435.312
+Mean: 439.546836627141
+25th Percentile: 332.656
+75th Percentile: 528.75
+Minimum: 191.875
+Maximum: 819.687
+
+Statistics for TCP Stream 2:
+Median: 471.562
+Mean: 481.81909484193005
+25th Percentile: 396.875
+75th Percentile: 552.5
+Minimum: 251.25
+Maximum: 790.0
+
+Statistics for TCP Stream 3:
+Median: 457.031
+Mean: 456.79614006024093
+25th Percentile: 398.437
+75th Percentile: 518.0465
+Minimum: 211.25
+Maximum: 700.937
+
+Statistics for TCP Stream 4:
+Median: 474.062
+Mean: 464.157725984252
+25th Percentile: 399.375
+75th Percentile: 553.281
+Minimum: 178.437
+Maximum: 761.25
+

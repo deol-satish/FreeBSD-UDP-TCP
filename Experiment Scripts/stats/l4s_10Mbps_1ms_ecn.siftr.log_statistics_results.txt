@@ -1,0 +1,104 @@
+Statistics for TCP Stream 4:
+Median: 75.937
+Mean: 84.97977020379479
+25th Percentile: 55.937
+75th Percentile: 103.75
+Minimum: 19.687
+Maximum: 262.812
+
+Statistics for TCP Stream 1:
+Median: 70.625
+Mean: 83.34667621870884
+25th Percentile: 54.375
+75th Percentile: 103.75
+Minimum: 17.812
+Maximum: 484.375
+
+Statistics for TCP Stream 2:
+Median: 88.437
+Mean: 95.87761376108062
+25th Percentile: 70.312
+75th Percentile: 111.562
+Minimum: 32.187
+Maximum: 313.125
+
+Statistics for TCP Stream 3:
+Median: 92.187
+Mean: 100.00179697093738
+25th Percentile: 66.562
+75th Percentile: 122.5
+Minimum: 20.625
+Maximum: 285.0
+
+Statistics for TCP Stream 4:
+Median: 75.937
+Mean: 84.97977020379479
+25th Percentile: 55.937
+75th Percentile: 103.75
+Minimum: 19.687
+Maximum: 262.812
+
+Statistics for TCP Stream 1:
+Median: 70.625
+Mean: 83.34667621870884
+25th Percentile: 54.375
+75th Percentile: 103.75
+Minimum: 17.812
+Maximum: 484.375
+
+Statistics for TCP Stream 2:
+Median: 88.437
+Mean: 95.87761376108062
+25th Percentile: 70.312
+75th Percentile: 111.562
+Minimum: 32.187
+Maximum: 313.125
+
+Statistics for TCP Stream 3:
+Median: 92.187
+Mean: 100.00179697093738
+25th Percentile: 66.562
+75th Percentile: 122.5
+Minimum: 20.625
+Maximum: 285.0
+
+Statistics for TCP Stream 4:
+Median: 75.937
+Mean: 84.97977020379479
+25th Percentile: 55.937
+75th Percentile: 103.75
+Minimum: 19.687
+Maximum: 262.812
+
+Statistics for TCP Stream 1:
+Median: 70.625
+Mean: 83.34667621870884
+25th Percentile: 54.375
+75th Percentile: 103.75
+Minimum: 17.812
+Maximum: 484.375
+
+Statistics for TCP Stream 2:
+Median: 88.437
+Mean: 95.87761376108062
+25th Percentile: 70.312
+75th Percentile: 111.562
+Minimum: 32.187
+Maximum: 313.125
+
+Statistics for TCP Stream 3:
+Median: 92.187
+Mean: 100.00179697093738
+25th Percentile: 66.562
+75th Percentile: 122.5
+Minimum: 20.625
+Maximum: 285.0
+
+Statistics for TCP Stream 4:
+Median: 75.937
+Mean: 84.97977020379479
+25th Percentile: 55.937
+75th Percentile: 103.75
+Minimum: 19.687
+Maximum: 262.812
+

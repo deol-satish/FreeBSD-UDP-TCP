@@ -1,0 +1,104 @@
+Statistics for TCP Stream 4:
+Median: 96.25
+Mean: 122.96447445255473
+25th Percentile: 62.5
+75th Percentile: 137.3435
+Minimum: 23.75
+Maximum: 727.5
+
+Statistics for TCP Stream 1:
+Median: 108.437
+Mean: 125.55481408720648
+25th Percentile: 70.625
+75th Percentile: 147.3435
+Minimum: 27.812
+Maximum: 859.062
+
+Statistics for TCP Stream 2:
+Median: 105.0
+Mean: 126.90363710113573
+25th Percentile: 79.687
+75th Percentile: 140.937
+Minimum: 39.687
+Maximum: 841.562
+
+Statistics for TCP Stream 3:
+Median: 102.3435
+Mean: 124.45780641925775
+25th Percentile: 76.562
+75th Percentile: 145.0
+Minimum: 35.312
+Maximum: 689.375
+
+Statistics for TCP Stream 4:
+Median: 96.25
+Mean: 122.96447445255473
+25th Percentile: 62.5
+75th Percentile: 137.3435
+Minimum: 23.75
+Maximum: 727.5
+
+Statistics for TCP Stream 1:
+Median: 108.437
+Mean: 125.55481408720648
+25th Percentile: 70.625
+75th Percentile: 147.3435
+Minimum: 27.812
+Maximum: 859.062
+
+Statistics for TCP Stream 2:
+Median: 105.0
+Mean: 126.90363710113573
+25th Percentile: 79.687
+75th Percentile: 140.937
+Minimum: 39.687
+Maximum: 841.562
+
+Statistics for TCP Stream 3:
+Median: 102.3435
+Mean: 124.45780641925775
+25th Percentile: 76.562
+75th Percentile: 145.0
+Minimum: 35.312
+Maximum: 689.375
+
+Statistics for TCP Stream 4:
+Median: 96.25
+Mean: 122.96447445255473
+25th Percentile: 62.5
+75th Percentile: 137.3435
+Minimum: 23.75
+Maximum: 727.5
+
+Statistics for TCP Stream 1:
+Median: 108.437
+Mean: 125.55481408720648
+25th Percentile: 70.625
+75th Percentile: 147.3435
+Minimum: 27.812
+Maximum: 859.062
+
+Statistics for TCP Stream 2:
+Median: 105.0
+Mean: 126.90363710113573
+25th Percentile: 79.687
+75th Percentile: 140.937
+Minimum: 39.687
+Maximum: 841.562
+
+Statistics for TCP Stream 3:
+Median: 102.3435
+Mean: 124.45780641925775
+25th Percentile: 76.562
+75th Percentile: 145.0
+Minimum: 35.312
+Maximum: 689.375
+
+Statistics for TCP Stream 4:
+Median: 96.25
+Mean: 122.96447445255473
+25th Percentile: 62.5
+75th Percentile: 137.3435
+Minimum: 23.75
+Maximum: 727.5
+

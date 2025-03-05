@@ -1,0 +1,15 @@
+.idea
+.vscode
+/Experiment Scripts/Old
+**/llmrawdata.txt
+**/lmprocesseddata.txt
+**/messagesoutput.txt
+/.hg
+*.json
+*.pcap
+*.log
+*.out
+*.png
+*.pkl
+*.eps
+
