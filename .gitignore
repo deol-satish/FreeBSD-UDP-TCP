@@ -13,3 +13,4 @@
 *.pkl
 *.eps
 
+/All AQM LLM Data/Kernel Data Analysis/utils/__pycache__
