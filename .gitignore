@@ -12,5 +12,8 @@
 *.png
 *.pkl
 *.eps
+*.png
+*.txt
 
 /All AQM LLM Data/Kernel Data Analysis/utils/__pycache__
+*.pyc

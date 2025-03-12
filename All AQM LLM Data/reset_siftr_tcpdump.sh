@@ -94,6 +94,8 @@ ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.p
 
 ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
 
+ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.txt"
+
 ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
 ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
 ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"

@@ -9,14 +9,15 @@ tcp2="dctcp"
 
 # AQM schemes
 aqm_schemes=("l4s")
-aqm_schemes=("l4s" "fq_codel" "fq_pie" )
+# aqm_schemes=("l4s" "fq_codel" "fq_pie" )
+aqm_schemes=("l4s" "fq_pie" "fq_codel")
 
 # Bandwidth, delay, and ECN settings
-# bandwidth=("10Mbps" "100Mbps" "1Mbps" "8Mbps")
-# delay=("10ms" "20ms")
+bandwidth=("10Mbps" "5Mbps" "8Mbps" "20Mbps")
+delay=("0ms" "1ms" "5ms" "7ms" "10ms" "20ms")
 
-bandwidth=("10Mbps")
-delay=("1ms")
+# bandwidth=("5Mbps")
+# delay=("0ms")
 
 ecn=("ecn")
 
@@ -25,7 +26,7 @@ tcp_ecn_enable=1
 dctcp_ect1=1
 
 # Set test duration (60 seconds) and wait time
-duration=300
+duration=60
 end_wait_time=10
 
 # Access to VMs and router
@@ -97,9 +98,15 @@ configure_routers() {
 # Function to run iperf3 client and server
 client_iperf3_script() {
     sleep 5
-    sleep 5
     iter=$1
+    aqm=$2
+    bw=$3
+    d=$4
+    e=$5
+    echo "Starting logging data"
+    echo "Iteration: $iter, AQM: $aqm, Bandwidth: $bw, Delay: $d, ECN: $e"
     testname="${iter}_${aqm}_${bw}_${d}_${e}"
+    echo "testname: $testname"
     echo "Running iperf3 client-side test, iteration $iter"
     ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c 172.16.1.2 -t $duration -p 5103 -J > iperf3_client_${tcp2}_${testname}.json" &
     ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c 172.16.1.2 -t $duration -p 5101 -J -C cubic > iperf3_client_cubic_${testname}.json" &
@@ -118,13 +125,24 @@ server_iperf3_script() {
 }
 
 
+kill_server_iperf3_script() {
+    echo "Running iperf3 server-side test"
+    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "pkill screen"
+    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall screen"
+}
+
+
 # Function to start logging data
 start_log(){
-    aqm=$1
-    bw=$2
-    d=$3
-    e=$4
+    iter=$1
+    aqm=$2
+    bw=$3
+    d=$4
+    e=$5
+    echo "Starting logging data"
+    echo "Iteration: $iter, AQM: $aqm, Bandwidth: $bw, Delay: $d, ECN: $e"
     testname="${iter}_${aqm}_${bw}_${d}_${e}"
+    echo "testname: $testname"
     # Configure siftr, if enabled
     if [ "$do_siftr" -eq 1 ]; then
         sleep 1
@@ -168,11 +186,6 @@ start_log(){
 
 # Function to end logging data
 end_log(){
-    aqm=$1
-    bw=$2
-    d=$3
-    e=$4
-    testname="${iter}_${aqm}_${bw}_${d}_${e}"
     # Stop siftr, if enabled
     if [ "$do_siftr" -eq 1 ]; then
         sleep 1
@@ -219,6 +232,59 @@ end_log(){
 }
 
 
+kernel_data_create()
+{
+    iter=$1
+    aqm=$2
+    bw=$3
+    d=$4
+    e=$5
+    echo "Starting logging data"
+    echo "Iteration: $iter, AQM: $aqm, Bandwidth: $bw, Delay: $d, ECN: $e"
+    testname="${iter}_${aqm}_${bw}_${d}_${e}"
+    echo "testname: $testname"
+    mkdir -p ./server_data
+    mkdir -p ./client1_data
+    mkdir -p ./client2_data
+    mkdir -p ./router_data
+    mkdir -p ./Graphs
+    mkdir -p ./stats
+
+    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "cat /var/log/messages > kernel_data_${testname}.txt"
+}
+
+
+
+data_download()
+{
+    echo "Starting downloading data"
+
+    mkdir -p ./server_data
+    mkdir -p ./client1_data
+    mkdir -p ./client2_data
+    mkdir -p ./router_data
+    mkdir -p ./Graphs
+    mkdir -p ./stats
+
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./server_data; 
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./server_data;
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./server_data;
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./server_data;
+
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client1_data;
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client1_data;
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client1_data;
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client1_data;
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client2_data;
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client2_data;
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client2_data;
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client2_data;
+
+    # ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "cat /var/log/messages > kernel_data_{$testname}.txt"
+
+    scp -P "$router1port" -p -i "$sshkeypath" root@"$vmhostaddr":*txt ./router_data; 
+}
+
 # Cleanup previous data and iperf3 instances
 cleanup() {
     echo "Cleaning up previous data and processes"
@@ -231,6 +297,7 @@ cleanup() {
 ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
 ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
 ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
+ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.txt"
 
 ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
 ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
@@ -242,7 +309,7 @@ rm -r ./client2_data
 rm -r ./Graphs
 rm -r ./stats
 
-
+server_iperf3_script
 # Function to run the test
 run_test() {
     iter=$1
@@ -250,12 +317,17 @@ run_test() {
         for bw in "${bandwidth[@]}"; do
             for d in "${delay[@]}"; do
                 for e in "${ecn[@]}"; do
+                    server_iperf3_script
                     configure_tcp_cc_ecn "$e"
                     configure_routers "$aqm" "$bw" "$d" "$e"
                     start_log "$iter" "$aqm" "$bw" "$d" "$e"
                     # server_iperf3_script "$iter"
                     client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e"
-                    end_log "$iter" "$aqm" "$bw" "$d" "$e"
+                    end_log
+                    kill_server_iperf3_script
+                    kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e"
+                    sleep 1
+                    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
                 done
             done
         done
@@ -268,6 +340,8 @@ for i in $(seq 1 $iterations); do
     run_test "$i"
     echo "Iteration $i completed"
 done
+
+data_download
 
 # completed
 echo "Test complete"

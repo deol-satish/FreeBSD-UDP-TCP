@@ -23,7 +23,7 @@ def find_files_with_extension(paths=['./'], extension='.log'):
 def print_rtt_stats(paths,scenario):
     print()
     print("RTT *-*-*"*5)
-    print(f"RTT statistics for scenario {scenario}:")
+    print(f"RTT statistics in millisecond (ms) for scenario {scenario}:")
     for i, (path_label, path_df) in enumerate(paths.items()):
         statistics = calculate_statistics(path_df)
         print(f"Statistics for {path_label}:")
@@ -35,11 +35,11 @@ def print_rtt_stats(paths,scenario):
 def save_rtt_stats(paths,scenario,stats_directory):
     print()
     stats_filename = f"{stats_directory}/scn_{scenario}_rtt_stats.txt"
-    print(f"Saving RTT statistics to {stats_filename}")
+    print(f"Saving RTT statistics in millisecond (ms) to {stats_filename}")
     with open(stats_filename, 'w') as f:
         for i, (path_label, path_df) in enumerate(paths.items()):
             statistics = calculate_statistics(path_df)
-            f.write(f"Statistics for {path_label}: \n")
+            f.write(f"Statistics in millisecond (ms) for {path_label}: \n")
             for key, value in statistics.items():
                 f.write(f"{key}: {value}\n")
             f.write("\n")

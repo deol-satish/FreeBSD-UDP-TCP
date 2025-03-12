@@ -27,7 +27,7 @@ sudo scp -P 4423 -p -i ~/.ssh/mptcprootkey root@192.168.56.1:*.json ./client2_da
 sudo scp -P 4423 -p -i ~/.ssh/mptcprootkey root@192.168.56.1:*.pcap ./client2_data;
 sudo scp -P 4423 -p -i ~/.ssh/mptcprootkey root@192.168.56.1:*.out ./client2_data;
 
-ssh -p 4422 -i ~/.ssh/mptcprootkey root@192.168.56.1 "cat /var/log/messages > llmrawdata.txt"
+# ssh -p 4422 -i ~/.ssh/mptcprootkey root@192.168.56.1 "cat /var/log/messages > llmrawdata.txt"
 
 sudo scp -P 4422 -p -i ~/.ssh/mptcprootkey root@192.168.56.1:*txt ./router_data; 
 
