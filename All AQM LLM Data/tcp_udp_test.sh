@@ -9,7 +9,6 @@ tcp2="dctcp"
 
 # AQM schemes
 aqm_schemes=("l4s")
-# aqm_schemes=("l4s" "fq_codel" "fq_pie" )
 aqm_schemes=("l4s" "fq_pie" "fq_codel")
 
 # Bandwidth, delay, and ECN settings
@@ -294,7 +293,7 @@ data_download()
     scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client1_data;
     scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client1_data;
     scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client1_data;:
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client1_data;
     scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client2_data;
     scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client2_data;
     scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client2_data;

@@ -32,6 +32,13 @@ def print_rtt_stats(paths,scenario):
     print("END RTT *-*-*"*5)
     print()
 
+def return_rtt_stats(paths):
+    return_stats = {}
+    for i, (path_label, path_df) in enumerate(paths.items()):
+        statistics = calculate_statistics(path_df)
+        return_stats[path_label] = statistics
+    return return_stats
+
 def save_rtt_stats(paths,scenario,stats_directory):
     print()
     stats_filename = f"{stats_directory}/scn_{scenario}_rtt_stats.txt"
