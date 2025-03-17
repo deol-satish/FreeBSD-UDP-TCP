@@ -1,34 +1,44 @@
 #!/bin/bash
 
-data_download()
-{
+data_download() {
     echo "Starting downloading data"
 
-    mkdir -p ./server_data
-    mkdir -p ./client1_data
-    mkdir -p ./client2_data
-    mkdir -p ./router_data
-    mkdir -p ./Graphs
-    mkdir -p ./stats
+    # Generate timestamp
+    timestamp=$(date +"%Y-%m-%d-%H-%M-%S")
 
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./server_data; 
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./server_data;
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./server_data;
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./server_data;
+    # Create main directory with timestamp
+    base_dir="./data_${timestamp}"
+    mkdir -p "$base_dir/server_data"
+    mkdir -p "$base_dir/client1_data"
+    mkdir -p "$base_dir/client2_data"
+    mkdir -p "$base_dir/kernel_data"
+    mkdir -p "$base_dir/Graphs"
+    mkdir -p "$base_dir/stats"
 
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client1_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client2_data;
+    # Download data into respective directories
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log "$base_dir/server_data"
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap "$base_dir/server_data"
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.out "$base_dir/server_data"
+    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.json "$base_dir/server_data"
 
-    # ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "cat /var/log/messages > kernel_data_{$testname}.txt"
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log "$base_dir/client1_data"
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json "$base_dir/client1_data"
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap "$base_dir/client1_data"
+    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out "$base_dir/client1_data"
 
-    scp -P "$router1port" -p -i "$sshkeypath" root@"$vmhostaddr":*txt ./router_data; 
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log "$base_dir/client2_data"
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json "$base_dir/client2_data"
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap "$base_dir/client2_data"
+    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out "$base_dir/client2_data"
+
+    # Uncomment the below line if you need to capture kernel logs
+    # ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "cat /var/log/messages > kernel_data_${testname}.txt"
+
+    scp -P "$router1port" -p -i "$sshkeypath" root@"$vmhostaddr":*txt "$base_dir/kernel_data"
+
+    echo "Data download complete. Files are saved in $base_dir"
 }
+
 
 # Cleanup previous data and iperf3 instances
 cleanup() {

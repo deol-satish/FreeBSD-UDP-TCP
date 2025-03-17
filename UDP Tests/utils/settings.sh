@@ -6,14 +6,14 @@ tcp2="dctcp"
 
 # AQM schemes
 aqm_schemes=("l4s")
-aqm_schemes=("l4s" "fq_pie" "fq_codel")
+# aqm_schemes=("l4s" "fq_pie" "fq_codel")
 
 # Bandwidth, delay, and ECN settings
-bandwidth=("10Mbps" "5Mbps" "8Mbps" "20Mbps")
-delay=("0ms" "10ms" "20ms" "30ms" "40ms")
+# bandwidth=("10Mbps" "5Mbps" "8Mbps" "20Mbps")
+# delay=("0ms" "10ms" "20ms" "30ms" "40ms")
 
-# bandwidth=("5Mbps")
-# delay=("0ms")
+bandwidth=("10Mbps" "5Mbps")
+delay=("0ms")
 
 ecn=("ecn")
 
