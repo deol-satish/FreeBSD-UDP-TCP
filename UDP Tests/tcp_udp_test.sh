@@ -8,43 +8,66 @@ source ./utils/router_config.sh
 source ./utils/tcp_iperf3.sh
 source ./utils/logger.sh
 source ./utils/util.sh
+source ./utils/udp_iperf3.sh
 
-
-# Before starting delete all previous files
-ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.txt"
-
-ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-#ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-
-rm -r ./server_data
-rm -r ./client1_data
-rm -r ./client2_data
-rm -r ./Graphs
-rm -r ./stats
+cleanup
 
 server_iperf3_script
 # Function to run the test
+
+run_tcp_test() {
+    iter=$1
+    aqm=$2
+    bw=$3
+    d=$4
+    e=$5
+    protocol="tcp"
+    start_log "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    # server_iperf3_script "$iter"
+    client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    end_log
+    kill_server_iperf3_script
+    kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+                    
+}
+
+run_udp_test() {
+    iter=$1
+    aqm=$2
+    bw=$3
+    d=$4
+    e=$5
+    protocol="udp"
+    start_log "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    # server_iperf3_script "$iter"
+    udp_client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    end_log
+    kill_server_iperf3_script
+    kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+                    
+}
+
+
 run_test() {
     iter=$1
     for aqm in "${aqm_schemes[@]}"; do
         for bw in "${bandwidth[@]}"; do
             for d in "${delay[@]}"; do
                 for e in "${ecn[@]}"; do
-                    server_iperf3_script
+
+                    # server_iperf3_script
                     configure_tcp_cc_ecn "$e"
                     configure_routers "$aqm" "$bw" "$d" "$e"
-                    start_log "$iter" "$aqm" "$bw" "$d" "$e"
-                    # server_iperf3_script "$iter"
-                    client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e"
-                    end_log
-                    kill_server_iperf3_script
-                    kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e"
-                    sleep 1
-                    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+                    
+                    #TCP Test Start
+                    run_tcp_test "$iter" "$aqm" "$bw" "$d" "$e"
+
+                    #UDP Test Start
+                    run_udp_test "$iter" "$aqm" "$bw" "$d" "$e"                    
+                    
+
                 done
             done
         done

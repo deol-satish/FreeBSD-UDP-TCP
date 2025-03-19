@@ -5,25 +5,29 @@ tcp1="newreno"
 tcp2="dctcp"
 
 # AQM schemes
-aqm_schemes=("l4s")
+aqm_schemes=("l4s" "fq_codel")
 # aqm_schemes=("l4s" "fq_pie" "fq_codel")
 
 # Bandwidth, delay, and ECN settings
-# bandwidth=("10Mbps" "5Mbps" "8Mbps" "20Mbps")
-# delay=("0ms" "10ms" "20ms" "30ms" "40ms")
 
-bandwidth=("10Mbps" "5Mbps")
-delay=("0ms")
 
-ecn=("ecn")
+
+
+bandwidth=("10Mbps" "5Mbps" "8Mbps" "20Mbps")
+delay=("0ms" "10ms" "20ms" "30ms" "40ms")
+
+# bandwidth=("10Mbps" "5Mbps")
+# delay=("0ms")
+
+ecn=("noecn")
 
 # Set TCP ECN enable on clients
-tcp_ecn_enable=1
-dctcp_ect1=1
+tcp_ecn_enable=0
+dctcp_ect1=0
 
 # Set test duration (60 seconds) and wait time
-duration=10
-end_wait_time=1
+duration=120
+end_wait_time=10
 
 # Access to VMs and router
 src1host="test2"
