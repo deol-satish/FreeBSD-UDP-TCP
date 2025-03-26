@@ -1,9 +1,0 @@
-screen -dmS iperf_session iperf3 -s
-
-screen -r iperf_session
-
-screen -ls
-
-screen -dmS session1 iperf3 -s -p 5101
-
-screen -X -S iperf_session quit
