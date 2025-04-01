@@ -6,9 +6,7 @@ dos2unix corrects formatting error
 find ./confs/ -type f -exec dos2unix {} \;
 find ./ -type f -exec dos2unix {} \;
 ------------------------------------------------------------------------------------------
-cd /mnt/c/Users/deols/OneDrive/Documents/GitHub/FreeBSD-L4S-Experiments/New\ Setup
-
-cd /mnt/g/Github/FreeBSD-EXP-Condensed
+IF you get Error while buildowlrd then increase swapsize to atleast 2GB
 ------------------------------------------------------------------------------------------
 Always use ipfw -f flush before resetting ipfw rules
 ------------------------------------------------------------------------------------------

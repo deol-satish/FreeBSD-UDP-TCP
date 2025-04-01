@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # Set basic configuration values
 source ../utils/settings.sh
 
