@@ -31,7 +31,7 @@ git checkout UDP-Dev
 make -j2 buildworld 
 ```
 
-IF you get Error while buildowlrd then increase swapsize to atleast 2GB
+IF you get Error while buildoworld then increase swapsize to atleast 2GB
 ```sh
 git clone https://github.com/deol-satish/FreeBSD-L4S-SRC.git; cd FreeBSD-L4S-SRC; git checkout L4S-141; make -j2 buildworld 
 ```
@@ -68,4 +68,8 @@ make buildkernel -j2 KERNCONF=L4SKERNEL
 make clean; make -j6 buildworld 
 make buildkernel -j6 KERNCONF=L4SKERNEL;
 
+make -j6 installworld
+
 sysctl net.inet.ip.dummynet
+
+shutdown -p now
