@@ -48,8 +48,9 @@ make installkernel -j4 KERNCONF=L4SKERNEL
 shutdown -r now
 ```
 
-git checkout origin/dualpi2141;git pull origin dualpi2141
-git checkout origin/L4S-ECT1;git pull origin L4S-ECT1
+git checkout origin/L4S-141;git pull origin L4S-141
+git checkout origin/L4S-141-datacollection;git pull origin L4S-141-datacollection
+
 make clean; make -j12 buildworld 
 
 git clone https://github.com/deol-satish/FreeBSD-L4S-SRC.git; cd FreeBSD-L4S-SRC; git checkout L4S-DEV-142;make clean; make -j4 buildworld 
