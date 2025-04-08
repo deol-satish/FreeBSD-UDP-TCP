@@ -59,23 +59,23 @@ data_download()
     mkdir -p ./Graphs
     mkdir -p ./stats
 
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./server_data; 
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./server_data;
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./server_data;
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./server_data;
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.siftr.log ./server_data; 
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.pcap ./server_data;
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.out ./server_data;
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.json ./server_data;
 
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client1_data;:
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.siftr.log ./client1_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.json ./client1_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.pcap ./client1_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.out ./client1_data;:
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.siftr.log ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.json ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.pcap ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.out ./client2_data;
 
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "cat /var/log/messages > kernel_data_{$testname}.txt"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "cat /var/log/messages > kernel_data_{$testname}.txt"
 
-    scp -P "$router1port" -p -i "$sshkeypath" root@"$vmhostaddr":*txt ./router_data; 
+    scp -p -i "$sshkeypath" root@"$router_ipaddr":*txt ./router_data; 
 }
 
 

@@ -5,7 +5,7 @@ tcp1="newreno"
 tcp2="dctcp"
 
 # AQM schemes
-aqm_schemes=("l4s")
+aqm_schemes=("dualpi2")
 # aqm_schemes=("l4s" "fq_pie" "fq_codel")
 
 # Bandwidth, delay, and ECN settings
@@ -38,6 +38,14 @@ dsthost="client1"
 dsthostport="3322"
 router1host="dummynetVM1"
 router1port="4422"
+
+
+# Define IP addresses
+router_ipaddr="192.168.11.128"
+client1_ipaddr="192.168.11.130"
+client2_ipaddr="192.168.11.131"
+server_ipaddr="192.168.11.132"
+
 
 # Enable or disable SIFTR and TCPDUMP
 do_siftr="1"

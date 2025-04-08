@@ -10,9 +10,12 @@ source ./utils/logger.sh
 source ./utils/util.sh
 source ./utils/udp_iperf3.sh
 
-cleanup
+# cleanup
 
-server_iperf3_script
+echo ""
+echo "Start Server Script"
+# server_iperf3_script
+echo "Server Script Started"
 # Function to run the test
 
 run_tcp_test() {
@@ -22,13 +25,17 @@ run_tcp_test() {
     d=$4
     e=$5
     protocol="tcp"
+    echo ""
+    echo "Iteration: $iter, AQM: $aqm, Bandwidth: $bw, Delay: $d, ECN: $e"
+
     start_log "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    echo ""
     # server_iperf3_script "$iter"
     client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
     end_log
     kill_server_iperf3_script
     kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
                     
 }
 
@@ -45,7 +52,7 @@ run_udp_test() {
     end_log
     kill_server_iperf3_script
     kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
                     
 }
 
@@ -58,14 +65,19 @@ run_test() {
                 for e in "${ecn[@]}"; do
 
                     # server_iperf3_script
+                    echo ""
+                    echo "===================================================================="
                     configure_tcp_cc_ecn "$e"
+                    echo "===================================================================="
+                    echo ""
                     configure_routers "$aqm" "$bw" "$d" "$e"
+                    echo "===================================================================="
                     
                     #TCP Test Start
                     run_tcp_test "$iter" "$aqm" "$bw" "$d" "$e"
 
-                    #UDP Test Start
-                    run_udp_test "$iter" "$aqm" "$bw" "$d" "$e"                    
+                    # #UDP Test Start
+                    # run_udp_test "$iter" "$aqm" "$bw" "$d" "$e"                    
                     
 
                 done

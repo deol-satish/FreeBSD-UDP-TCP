@@ -9,17 +9,17 @@ end_log(){
     if [ "$do_siftr" -eq 1 ]; then
         
         echo "Stop siftr on $src1host"
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
 
         
         echo "Stop siftr on $src2host"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
 
         
         echo "Stop siftr on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
     fi
 
@@ -27,7 +27,7 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         
         echo "Stop tcpdump on $src1host"
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr \
         "killall tcpdump"
     fi
 
@@ -35,7 +35,7 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         
         echo "Stop tcpdump on $src2host"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr \
         "killall tcpdump"
     fi
 
@@ -43,27 +43,27 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         
         echo "Stop tcpdump on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "killall tcpdump"
     fi
     
 }
 
-ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
-ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
-ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
+ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
+ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
+ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
 
-ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
 
-ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.txt"
+ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "rm *.txt"
 
-ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
+ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "killall iperf3"
+ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "killall iperf3"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "killall iperf3"
 
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "pkill screen"
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall screen"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "pkill screen"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "killall screen"
 
 end_log
 # completed

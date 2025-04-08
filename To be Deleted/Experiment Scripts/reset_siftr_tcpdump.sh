@@ -43,7 +43,7 @@ end_log(){
 
         sleep 1
         echo "Stop siftr on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
     fi
 
@@ -59,14 +59,14 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         sleep 1
         echo "Stop tcpdump on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "killall tcpdump"
     fi
     
 }
 
 ssh -p "$srchostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out"
 
 ssh -p "$srchostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
 

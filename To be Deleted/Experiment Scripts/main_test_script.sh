@@ -72,10 +72,10 @@ configure_tcp_cc_ecn() {
     # Check if ecn_status is "ecn" and set ecn.enable to 3
     if [ "$ecn_status" == "ecn" ]; then
         ssh -p "$srchostport" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
     elif [ "$ecn_status" == "noecn" ]; then
         ssh -p "$srchostport" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=0"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=0"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "sysctl net.inet.tcp.ecn.enable=0"
     fi
 }
 
@@ -91,11 +91,11 @@ configure_routers() {
     if [ "$aqm" == "fq_codel" ] || [ "$aqm" == "fq_pie" ] || [ "$aqm" == "l4s" ]; then
   
         echo "Configuring Router 1"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw -f flush"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw pipe 1 config bw $bw delay $d"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw sched 1 config pipe 1 type $aqm $e"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw queue 1 config sched 1"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw add 100 queue 1 ip from 172.16.0.0/16 to 172.16.0.0/16"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw -f flush"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw pipe 1 config bw $bw delay $d"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw sched 1 config pipe 1 type $aqm $e"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw queue 1 config sched 1"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw add 100 queue 1 ip from 172.16.0.0/16 to 172.16.0.0/16"
 
 
         # echo "Configuring Router 2"
@@ -108,9 +108,9 @@ configure_routers() {
 
     elif [ "$aqm" == "codel" ] || [ "$aqm" == "pie" ]; then
         echo "Configuring Router 1"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw -f flush"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw pipe 1 config bw $bw delay $d $aqm $e"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw add 100 pipe 1 ip from any to any"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw -f flush"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw pipe 1 config bw $bw delay $d $aqm $e"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw add 100 pipe 1 ip from any to any"
 
         # echo "Configuring Router 2"
         # ssh -p "$router2port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw -f flush"
@@ -137,9 +137,9 @@ start_log(){
 
         sleep 1
         echo "Starting siftr on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "rm /root/${testname}.siftr.log && touch /root/${testname}.siftr.log ; sysctl net.inet.siftr.logfile=/root/${testname}.siftr.log"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "sysctl net.inet.siftr.enabled=1"
     fi
 
@@ -150,7 +150,7 @@ start_log(){
 
         sleep 1
         echo "Starting tcpdump on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "tcpdump -i em1 -w /root/${testname}.em1.pcap >& tcpdump.em1.out & ; tcpdump -i em2 -w /root/${testname}.em2.pcap >& tcpdump.em2.out & ;"
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "tcpdump -i em1 -w /root/${testname}.em1.pcap >& tcpdump.em1.out & ; tcpdump -i em2 -w /root/${testname}.em2.pcap >& tcpdump.em2.out & ;"
     fi
     
 }
@@ -171,7 +171,7 @@ end_log(){
 
         sleep 1
         echo "Stop siftr on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
     fi
 
@@ -187,7 +187,7 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         sleep 1
         echo "Stop tcpdump on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "killall tcpdump"
     fi
     
@@ -210,19 +210,19 @@ client_iperf3_script() {
 server_iperf3_script() {
     echo "run server side iperf3 scripts"
 
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -s -p 5101 -1" >/dev/null &
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -s -p 5102 -1" >/dev/null &
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -s -p 5103 -1" >/dev/null &
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -s -p 5104 -1" >/dev/null &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "iperf3 -s -p 5101 -1" >/dev/null &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "iperf3 -s -p 5102 -1" >/dev/null &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "iperf3 -s -p 5103 -1" >/dev/null &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "iperf3 -s -p 5104 -1" >/dev/null &
  
 }
 
 # Before starting delete all previous files
 ssh -p "$srchostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out"
 
 ssh -p "$srchostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-#ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
+#ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "killall iperf3"
 
 # Nested for loops to iterate over each combination
 for aqm in "${aqm_schemes[@]}"; do
@@ -239,7 +239,7 @@ for aqm in "${aqm_schemes[@]}"; do
 
                 end_log "$aqm" "$bw" "$d" "$e"
                 ssh -p "$srchostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-                #ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
+                #ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "killall iperf3"
             done
         done
     done

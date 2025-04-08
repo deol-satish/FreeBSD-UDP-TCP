@@ -14,8 +14,8 @@ udp_client_iperf3_script() {
     echo "testname: $testname"
     echo "Running UDP iperf3 client-side test, iteration $iter"
     
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -u -c 172.16.1.2 -t $duration -p 5101 -J > iperf3_client_udp_src1_${testname}.json" &
-    ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -u -c 172.16.1.2 -t $duration -p 5102 -J > iperf3_client_udp_src2_${testname}.json" &
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -u -c 172.16.1.2 -t $duration -p 5101 -J > iperf3_client_udp_src1_${testname}.json" &
+    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "iperf3 -u -c 172.16.1.2 -t $duration -p 5102 -J > iperf3_client_udp_src2_${testname}.json" &
 
     sleep $end_wait_time
 }

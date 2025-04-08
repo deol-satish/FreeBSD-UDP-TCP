@@ -28,7 +28,7 @@ run_tcp_test() {
     end_log
     kill_server_iperf3_script
     kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
                     
 }
 
@@ -45,7 +45,7 @@ run_udp_test() {
     end_log
     kill_server_iperf3_script
     kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
                     
 }
 

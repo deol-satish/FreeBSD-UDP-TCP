@@ -5,7 +5,7 @@ tcp1="newreno"
 tcp2="dctcp"
 
 # AQM schemes
-aqm_schemes=("l4s" "fq_codel")
+aqm_schemes=("dualpi2")
 # aqm_schemes=("l4s" "fq_pie" "fq_codel")
 
 # Bandwidth, delay, and ECN settings
@@ -19,11 +19,11 @@ delay=("0ms" "10ms" "20ms" "30ms" "40ms")
 # bandwidth=("10Mbps" "5Mbps")
 # delay=("0ms")
 
-ecn=("noecn")
+ecn=("ecn")
 
 # Set TCP ECN enable on clients
-tcp_ecn_enable=0
-dctcp_ect1=0
+tcp_ecn_enable=1
+dctcp_ect1=1
 
 # Set test duration (60 seconds) and wait time
 duration=120
@@ -39,6 +39,14 @@ dsthostport="3322"
 router1host="dummynetVM1"
 router1port="4422"
 
+
+# Define IP addresses
+router_ipaddr="192.168.11.128"
+client1_ipaddr="192.168.11.130"
+client2_ipaddr="192.168.11.131"
+server_ipaddr="192.168.11.132"
+
+
 # Enable or disable SIFTR and TCPDUMP
 do_siftr="1"
 do_tcpdump="1"
@@ -49,4 +57,4 @@ sshkeypath="$HOME/.ssh/mptcprootkey"
 vmhostaddr="192.168.56.1"
 
 # Number of iterations to run (10 times)
-iterations=2
+iterations=3

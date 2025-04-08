@@ -54,29 +54,29 @@ iterations=2
 configure_tcp_cc_ecn() {
     ecn_status=$1
     echo "Configuring TCP CC and ECN on sources"
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "kldload cc_$tcp1"
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.cc.algorithm=$tcp1"
-    ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "kldload cc_$tcp2"
-    ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.cc.algorithm=$tcp2"
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "kldload cc_$tcp1"
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "sysctl net.inet.tcp.cc.algorithm=$tcp1"
+    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "kldload cc_$tcp2"
+    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "sysctl net.inet.tcp.cc.algorithm=$tcp2"
 
     # Set DCTCP ECT1
     if [ "$tcp1" == "dctcp" ]; then
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.cc.dctcp.ect1=$dctcp_ect1"
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "sysctl net.inet.tcp.cc.dctcp.ect1=$dctcp_ect1"
     fi
 
     if [ "$tcp2" == "dctcp" ]; then
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.cc.dctcp.ect1=$dctcp_ect1"
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "sysctl net.inet.tcp.cc.dctcp.ect1=$dctcp_ect1"
     fi
 
     # Set ECN enable
     if [ "$ecn_status" == "ecn" ]; then
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "sysctl net.inet.tcp.ecn.enable=$tcp_ecn_enable"
     elif [ "$ecn_status" == "noecn" ]; then
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=0"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=0"
-        ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "sysctl net.inet.tcp.ecn.enable=0"
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "sysctl net.inet.tcp.ecn.enable=0"
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "sysctl net.inet.tcp.ecn.enable=0"
+        ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "sysctl net.inet.tcp.ecn.enable=0"
     fi
 }
 
@@ -87,11 +87,11 @@ configure_routers() {
     d=$3
     e=$4
     echo "Configuring AQM: $aqm with bandwidth $bw and delay $d, ECN: $e"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw -f flush"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw pipe 1 config bw $bw delay $d"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw sched 1 config pipe 1 type $aqm $e"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw queue 1 config sched 1"
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "ipfw add 100 queue 1 ip from any to any"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw -f flush"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw pipe 1 config bw $bw delay $d"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw sched 1 config pipe 1 type $aqm $e"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw queue 1 config sched 1"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "ipfw add 100 queue 1 ip from any to any"
 }
 
 # Function to run iperf3 client and server
@@ -107,9 +107,9 @@ tcp_client_iperf3_script() {
     testname="${iter}_${aqm}_${bw}_${d}_${e}"
     echo "testname: $testname"
     echo "Running iperf3 client-side test, iteration $iter"
-    ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c 172.16.1.2 -t $duration -p 5103 -J > iperf3_client_${tcp2}_${testname}.json" &
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c 172.16.1.2 -t $duration -p 5101 -J -C cubic > iperf3_client_cubic_${testname}.json" &
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c 172.16.1.2 -t $duration -p 5102 -J > iperf3_client_${tcp1}_${testname}.json"
+    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "iperf3 -c 172.16.1.2 -t $duration -p 5103 -J > iperf3_client_${tcp2}_${testname}.json" &
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -c 172.16.1.2 -t $duration -p 5101 -J -C cubic > iperf3_client_cubic_${testname}.json" &
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -c 172.16.1.2 -t $duration -p 5102 -J > iperf3_client_${tcp1}_${testname}.json"
     
     sleep $end_wait_time
 }
@@ -127,9 +127,9 @@ udp_client_iperf3_script() {
     testname="${iter}_${aqm}_${bw}_${d}_${e}"
     echo "testname: $testname"
     echo "Running iperf3 client-side test, iteration $iter"
-    ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c  172.16.1.2 -u -t $duration -p 5103 -J > iperf3_client_src2_${testname}.json" &
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c  172.16.1.2 -u -t $duration -p 5101 -J > iperf3_client_src1_${testname}.json" &
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "iperf3 -c  172.16.1.2 -u -t $duration -p 5102 -J > iperf3_client_src1_${testname}.json"
+    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "iperf3 -c  172.16.1.2 -u -t $duration -p 5103 -J > iperf3_client_src2_${testname}.json" &
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -c  172.16.1.2 -u -t $duration -p 5101 -J > iperf3_client_src1_${testname}.json" &
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -c  172.16.1.2 -u -t $duration -p 5102 -J > iperf3_client_src1_${testname}.json"
     
     sleep $end_wait_time
 }
@@ -138,16 +138,16 @@ server_iperf3_script() {
     # iter=$1
     # testname="${iter}_${aqm}_${bw}_${d}_${e}"
     echo "Running iperf3 server-side test"
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "screen -dmS session1 iperf3 -s -p 5101 --rcv-timeout 18000000" &
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "screen -dmS session2 iperf3 -s -p 5102 --rcv-timeout 18000000" &
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "screen -dmS session3 iperf3 -s -p 5103 --rcv-timeout 18000000" &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "screen -dmS session1 iperf3 -s -p 5101 --rcv-timeout 18000000" &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "screen -dmS session2 iperf3 -s -p 5102 --rcv-timeout 18000000" &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "screen -dmS session3 iperf3 -s -p 5103 --rcv-timeout 18000000" &
 }
 
 
 kill_server_iperf3_script() {
     echo "Running iperf3 server-side test"
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "pkill screen"
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall screen"
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "pkill screen"
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "killall screen"
 }
 
 
@@ -166,37 +166,37 @@ start_log(){
     if [ "$do_siftr" -eq 1 ]; then
         sleep 1
         echo "Starting siftr on $src1host"
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr \
         "rm /root/${testname}_${tcp1}_src1.siftr.log && touch /root/${testname}_${tcp1}_src1.siftr.log ;sysctl net.inet.siftr.logfile=/root/${testname}_${tcp1}_src1.siftr.log"
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr \
         "sysctl net.inet.siftr.enabled=1"
 
         echo "Starting siftr on $src2host"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr \
         "rm /root/${testname}_${tcp2}_src2.siftr.log && touch /root/${testname}_${tcp2}_src2.siftr.log ;sysctl net.inet.siftr.logfile=/root/${testname}_${tcp2}_src2.siftr.log"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr \
         "sysctl net.inet.siftr.enabled=1"
 
         sleep 1
         echo "Starting siftr on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "rm /root/${testname}_dsthost.siftr.log && touch /root/${testname}_dsthost.siftr.log ; sysctl net.inet.siftr.logfile=/root/${testname}_dsthost.siftr.log"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "sysctl net.inet.siftr.enabled=1"
     fi
 
     if [ "$do_tcpdump" -eq 1 ]; then
         sleep 1
         echo "Starting tcpdump on $src1host"
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "tcpdump -i em1 -w /root/${testname}_${tcp1}_src1.em1.pcap > tcpdump.em1.out 2>&1 & tcpdump -i em2 -w /root/${testname}_${tcp1}_src1.em2.pcap > tcpdump.em2.out 2>&1 &"
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "tcpdump -i em1 -w /root/${testname}_${tcp1}_src1.em1.pcap > tcpdump.em1.out 2>&1 & tcpdump -i em2 -w /root/${testname}_${tcp1}_src1.em2.pcap > tcpdump.em2.out 2>&1 &"
 
         sleep 1
         echo "Starting tcpdump on $src2host"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "tcpdump -i em1 -w /root/${testname}_${tcp2}_src2.em1.pcap > tcpdump.em1.out 2>&1 & tcpdump -i em2 -w /root/${testname}_${tcp2}_src2.em2.pcap > tcpdump.em2.out 2>&1 & tcpdump -i em3 -w /root/${testname}_${tcp2}_src2.em3.pcap > tcpdump.em3.out 2>&1 &"
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "tcpdump -i em1 -w /root/${testname}_${tcp2}_src2.em1.pcap > tcpdump.em1.out 2>&1 & tcpdump -i em2 -w /root/${testname}_${tcp2}_src2.em2.pcap > tcpdump.em2.out 2>&1 & tcpdump -i em3 -w /root/${testname}_${tcp2}_src2.em3.pcap > tcpdump.em3.out 2>&1 &"
 
         sleep 1
         echo "Starting tcpdump on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "tcpdump -i em1 -w /root/${testname}_dsthost.em1.pcap > tcpdump.em1.out 2>&1 & tcpdump -i em2 -w /root/${testname}_dsthost.em2.pcap > tcpdump.em2.out 2>&1 &"
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "tcpdump -i em1 -w /root/${testname}_dsthost.em1.pcap > tcpdump.em1.out 2>&1 & tcpdump -i em2 -w /root/${testname}_dsthost.em2.pcap > tcpdump.em2.out 2>&1 &"
     fi
 
 
@@ -209,17 +209,17 @@ end_log(){
     if [ "$do_siftr" -eq 1 ]; then
         sleep 1
         echo "Stop siftr on $src1host"
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
 
         sleep 1
         echo "Stop siftr on $src2host"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
 
         sleep 1
         echo "Stop siftr on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "sysctl net.inet.siftr.enabled=0"
     fi
 
@@ -227,7 +227,7 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         sleep 1
         echo "Stop tcpdump on $src1host"
-        ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr \
         "killall tcpdump"
     fi
 
@@ -235,7 +235,7 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         sleep 1
         echo "Stop tcpdump on $src2host"
-        ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr \
         "killall tcpdump"
     fi
 
@@ -243,11 +243,11 @@ end_log(){
     if [ "$do_tcpdump" -eq 1 ]; then
         sleep 1
         echo "Stop tcpdump on $dsthost"
-        ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" \
+        ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr \
         "killall tcpdump"
     fi
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "pkill screen"
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall screen"
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "pkill screen"
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "killall screen"
 }
 
 
@@ -269,7 +269,7 @@ kernel_data_create()
     mkdir -p ./Graphs
     mkdir -p ./stats
 
-    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "cat /var/log/messages > kernel_data_${testname}.txt"
+    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "cat /var/log/messages > kernel_data_${testname}.txt"
 }
 
 
@@ -285,42 +285,42 @@ data_download()
     mkdir -p ./Graphs
     mkdir -p ./stats
 
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./server_data; 
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./server_data;
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./server_data;
-    scp -P "$dsthostport" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./server_data;
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.siftr.log ./server_data; 
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.pcap ./server_data;
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.out ./server_data;
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.json ./server_data;
 
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client1_data;
-    scp -P "$src1port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client1_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.siftr.log ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.json ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.pcap ./client2_data;
-    scp -P "$src2port" -p -i "$sshkeypath" root@"$vmhostaddr":*.out ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.siftr.log ./client1_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.json ./client1_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.pcap ./client1_data;
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.out ./client1_data;
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.siftr.log ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.json ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.pcap ./client2_data;
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.out ./client2_data;
 
-    # ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "cat /var/log/messages > kernel_data_{$testname}.txt"
+    # ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "cat /var/log/messages > kernel_data_{$testname}.txt"
 
-    scp -P "$router1port" -p -i "$sshkeypath" root@"$vmhostaddr":*txt ./router_data; 
+    scp -p -i "$sshkeypath" root@"$router_ipaddr":*txt ./router_data; 
 }
 
 # Cleanup previous data and iperf3 instances
 cleanup() {
     echo "Cleaning up previous data and processes"
-    ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3"
-    ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3"
-    ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3"
+    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3"
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out"
 }
 
 # Before starting delete all previous files
-ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "rm *.siftr.log;rm *.pcap;rm *.out"
-ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "rm *.txt"
+ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out"
+ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out"
+ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "rm *.txt"
 
-ssh -p "$src1port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-ssh -p "$src2port" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
-#ssh -p "$dsthostport" -i "$sshkeypath" root@"$vmhostaddr" "killall iperf3"
+ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "killall iperf3"
+ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "killall iperf3"
+#ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "killall iperf3"
 
 rm -r ./server_data
 rm -r ./client1_data
@@ -346,7 +346,7 @@ run_test() {
                     kill_server_iperf3_script
                     kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e"
                     sleep 1
-                    ssh -p "$router1port" -i "$sshkeypath" root@"$vmhostaddr" "truncate -s 0 /var/log/messages"
+                    ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
                 done
             done
         done
