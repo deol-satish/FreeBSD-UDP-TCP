@@ -51,10 +51,10 @@ end_log(){
     
 }
 
-ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
-ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
-ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
-ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json"
+ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json;rm *dualpi2*.txt"
+ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json;rm *dualpi2*.txt"
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json;rm *dualpi2*.txt"
+ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out;rm *.json;rm *dualpi2*.txt"
 
 ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
 

@@ -13,7 +13,7 @@ aqm_schemes=("dualpi2")
 
 
 
-bandwidth=("10Mbps" "5Mbps" "8Mbps" "20Mbps")
+bandwidth=("10Mbps" "8Mbps" "20Mbps" "50Mbps" "80Mbps" "100Mbps")
 delay=("0ms" "10ms" "20ms" "30ms" "40ms")
 
 # bandwidth=("10Mbps" "5Mbps")
@@ -26,7 +26,7 @@ tcp_ecn_enable=1
 dctcp_ect1=1
 
 # Set test duration (60 seconds) and wait time
-duration=20
+duration=120
 end_wait_time=10
 
 # Access to VMs and router

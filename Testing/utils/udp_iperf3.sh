@@ -34,10 +34,10 @@ udp_client_iperf3_script() {
 
     # Start UDP receiver on server
     
-    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "cd udp_prague; ./udp_prague_receiver > udp_prague_receiver_${testname}.txt" &
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "./udp_prague/udp_prague_receiver -p 8082 > udp_prague_receiver_${testname}.txt" &
     
     sleep 2
-    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "cd udp_prague; ./udp_prague_sender -a 192.168.3.2 -p 8080 -c -v > udp_prague_sender_${testname}.txt" &
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "./udp_prague/udp_prague_sender -a 192.168.3.2 -p 8082 -c > udp_prague_sender_${testname}.txt" &
     ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "iperf3 -c 192.168.3.2 -t $duration -p 5101 -J -C cubic > iperf3_client_cubic_${testname}.json" &
     ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "iperf3 -c 192.168.3.2 -t $duration -p 5102 -J > iperf3_client_${tcp1}_${testname}.json" 
     

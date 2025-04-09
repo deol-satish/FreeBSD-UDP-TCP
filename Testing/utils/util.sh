@@ -44,9 +44,9 @@ data_download() {
 cleanup() {
     end_log
     echo "Cleaning up previous data and processes"
-    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3;rm *.json; pkill -f udp_prague_sender"
-    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3;rm *.json; pkill -f udp_prague_sender"
-    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3;rm *.json; pkill -f udp_prague_receiver"
+    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3;rm *.json; pkill -f udp_prague_sender;rm *dualpi2*.txt"
+    ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3;rm *.json; pkill -f udp_prague_sender;rm *dualpi2*.txt"
+    ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "rm *.siftr.log;rm *.pcap;rm *.out; killall iperf3;rm *.json; pkill -f udp_prague_receiver;rm *dualpi2*.txt"
     ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "rm *.txt"
 
     ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "truncate -s 0 /var/log/messages"
