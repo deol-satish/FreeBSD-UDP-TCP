@@ -1,11 +1,19 @@
-#!/bin/csh
+#!/bin/bash
+set -x
 
+source ../utils/settings.sh
 
-ssh -p 3322 -i ~/.ssh/mptcprootkey root@192.168.56.1 "shutdown -r now" >/dev/null &
-ssh -p 3323 -i ~/.ssh/mptcprootkey root@192.168.56.1 "shutdown -r now" >/dev/null &
-ssh -p 4422 -i ~/.ssh/mptcprootkey root@192.168.56.1 "shutdown -r now" >/dev/null &
-ssh -p 4423 -i ~/.ssh/mptcprootkey root@192.168.56.1 "shutdown -r now" >/dev/null &
+ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "shutdown -r now" &
+ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "shutdown -r now" &
+ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "shutdown -r now" &
+ssh -i ~/.ssh/mptcprootkey root@$server_ipaddr "shutdown -r now" &
 
 echo "done"
 exit 0
+
+# error
+out() {
+    echo "Abort test"
+    exit 1
+}
 

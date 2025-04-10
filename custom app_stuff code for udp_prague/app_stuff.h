@@ -241,12 +241,8 @@ struct AppStuff
         if (!quiet) {
             // Display receiver side info
             acc_bytes_sent += packet_size;
-            printf("---------------------------------------------------------------\n");            
             if (now - rept_tm >= 0)
-            {
                 PrintReceiver(now, packets_received, packets_CE, packets_lost);
-            }
-
         }
     }
     void LogSendRFC8888ACK(time_tp now, count_tp seqnr, size_tp packet_size, count_tp begin_seq, uint16_t num_reports, uint16_t *report)
