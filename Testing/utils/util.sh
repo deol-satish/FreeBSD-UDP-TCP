@@ -20,16 +20,62 @@ data_download() {
     scp -p -i "$sshkeypath" root@"$server_ipaddr":*.pcap "$base_dir/server_data"
     scp -p -i "$sshkeypath" root@"$server_ipaddr":*.out "$base_dir/server_data"
     scp -p -i "$sshkeypath" root@"$server_ipaddr":*.json "$base_dir/server_data"
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.txt "$base_dir/server_data"
 
     scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.siftr.log "$base_dir/client1_data"
     scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.json "$base_dir/client1_data"
     scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.pcap "$base_dir/client1_data"
     scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.out "$base_dir/client1_data"
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.txt "$base_dir/server_data"
 
     scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.siftr.log "$base_dir/client2_data"
     scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.json "$base_dir/client2_data"
     scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.pcap "$base_dir/client2_data"
     scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.out "$base_dir/client2_data"
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.txt "$base_dir/server_data"
+
+    # Uncomment the below line if you need to capture kernel logs
+    # ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "cat /var/log/messages > kernel_data_${testname}.txt"
+
+    scp -p -i "$sshkeypath" root@"$router_ipaddr":*txt "$base_dir/kernel_data"
+
+    echo "Data download complete. Files are saved in $base_dir"
+}
+
+
+simplified_data_download() {
+    echo "Starting downloading data"
+
+    # Generate timestamp
+    timestamp=$(date +"%Y-%m-%d")
+
+    # Create main directory with timestamp
+    base_dir="./data/udp_data_${timestamp}"
+    mkdir -p "$base_dir/server_data"
+    mkdir -p "$base_dir/client1_data"
+    mkdir -p "$base_dir/client2_data"
+    mkdir -p "$base_dir/kernel_data"
+    mkdir -p "$base_dir/Graphs"
+    mkdir -p "$base_dir/stats"
+
+    # Download data into respective directories
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.siftr.log "$base_dir/server_data"
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.pcap "$base_dir/server_data"
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.out "$base_dir/server_data"
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.json "$base_dir/server_data"
+    scp -p -i "$sshkeypath" root@"$server_ipaddr":*.txt "$base_dir/server_data"
+
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.siftr.log "$base_dir/client1_data"
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.json "$base_dir/client1_data"
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.pcap "$base_dir/client1_data"
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.out "$base_dir/client1_data"
+    scp -p -i "$sshkeypath" root@"$client1_ipaddr":*.txt "$base_dir/server_data"
+
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.siftr.log "$base_dir/client2_data"
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.json "$base_dir/client2_data"
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.pcap "$base_dir/client2_data"
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.out "$base_dir/client2_data"
+    scp -p -i "$sshkeypath" root@"$client2_ipaddr":*.txt "$base_dir/server_data"
 
     # Uncomment the below line if you need to capture kernel logs
     # ssh -i ~/.ssh/mptcprootkey root@$router_ipaddr "cat /var/log/messages > kernel_data_${testname}.txt"

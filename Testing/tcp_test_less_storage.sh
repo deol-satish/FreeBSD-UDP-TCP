@@ -12,10 +12,10 @@ source ./utils/udp_iperf3.sh
 
 cleanup
 
-echo ""
-echo "Start Server Script"
-server_iperf3_script
-echo "Server Script Started"
+# echo ""
+# echo "Start Server Script"
+# server_iperf3_script
+# echo "Server Script Started"
 # Function to run the test
 
 run_tcp_test() {
@@ -46,8 +46,7 @@ run_udp_test() {
     protocol="udp"
     start_log "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
     # server_iperf3_script "$iter"
-    server_iperf3_script
-    cused_udp_client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    udp_client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
     end_log
     kill_server_iperf3_script
     kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
@@ -63,7 +62,10 @@ run_test() {
             for d in "${delay[@]}"; do
                 for e in "${ecn[@]}"; do
 
-                    # server_iperf3_script
+                    echo ""
+                    echo "Start Server Script"
+                    server_iperf3_script
+                    echo "Server Script Started"
                     echo ""
                     echo "===================================================================="
                     echo "Iteration: $iter, AQM: $aqm, Bandwidth: $bw, Delay: $d, ECN: $e"
@@ -75,10 +77,17 @@ run_test() {
                     echo "===================================================================="
                     
                     #TCP Test Start
-                    #run_tcp_test "$iter" "$aqm" "$bw" "$d" "$e"
+                    run_tcp_test "$iter" "$aqm" "$bw" "$d" "$e"
 
                     # #UDP Test Start
-                    run_udp_test "$iter" "$aqm" "$bw" "$d" "$e"                    
+                    # run_udp_test "$iter" "$aqm" "$bw" "$d" "$e"  
+                    echo "===================================================================="   
+
+                    simplified_data_download   
+
+                    sleep 2
+
+                    cleanup                  
                     
 
                 done

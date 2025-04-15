@@ -10,7 +10,7 @@ source ./utils/logger.sh
 source ./utils/util.sh
 source ./utils/udp_iperf3.sh
 
-# cleanup
+cleanup
 
 echo ""
 echo "Start Server Script"
@@ -62,7 +62,10 @@ run_test() {
             for d in "${delay[@]}"; do
                 for e in "${ecn[@]}"; do
 
-                    # server_iperf3_script
+                    echo ""
+                    echo "Start Server Script"
+                    server_iperf3_script
+                    echo "Server Script Started"
                     echo ""
                     echo "===================================================================="
                     echo "Iteration: $iter, AQM: $aqm, Bandwidth: $bw, Delay: $d, ECN: $e"
