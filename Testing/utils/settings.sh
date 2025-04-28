@@ -8,19 +8,13 @@ tcp2="dctcp"
 aqm_schemes=("dualpi2")
 # aqm_schemes=("l4s" "fq_pie" "fq_codel")
 
+
 # Bandwidth, delay, and ECN settings
-
-
-
-
-# bandwidth=("10Mbps" "8Mbps" "20Mbps" "50Mbps" "80Mbps" "100Mbps")
-# delay=("0ms" "5ms" "7ms" "10ms" "15ms" "20ms" "30ms" "40ms")
-
 bandwidth=("100Mbps" "10Mbps" "20Mbps" "5Mbps" "150Mbps")
 delay=("0ms" "5ms" "10ms" "20ms")
 
-# bandwidth=("10Mbps" "5Mbps")
-# delay=("0ms")
+bandwidth=("200Mbps" "250Mbps")
+delay=("0ms" "5ms" "10ms" "20ms")
 
 ecn=("ecn")
 
