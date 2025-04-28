@@ -14,7 +14,7 @@ client_iperf3_script() {
     echo "testname: $testname"
     echo "TCP Running iperf3 client-side test, iteration $iter"
     ssh -i ~/.ssh/mptcprootkey root@$client2_ipaddr "iperf3 -c 192.168.3.2 -t $duration -p 5103 -J > iperf3_client_${tcp2}_${testname}.json" &
-    ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -c 192.168.3.2 -t $duration -p 5101 -J -C cubic > iperf3_client_cubic_${testname}.json" &
+    # ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -c 192.168.3.2 -t $duration -p 5101 -J -C cubic > iperf3_client_cubic_${testname}.json" &
     ssh -i ~/.ssh/mptcprootkey root@$client1_ipaddr "iperf3 -c 192.168.3.2 -t $duration -p 5102 -J > iperf3_client_${tcp1}_${testname}.json"
     
     sleep $end_wait_time

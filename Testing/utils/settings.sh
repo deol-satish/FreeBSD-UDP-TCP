@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # TCP variants
-tcp1="newreno"
+tcp1="cubic"
 tcp2="dctcp"
 
 # AQM schemes
@@ -16,7 +16,7 @@ aqm_schemes=("dualpi2")
 # bandwidth=("10Mbps" "8Mbps" "20Mbps" "50Mbps" "80Mbps" "100Mbps")
 # delay=("0ms" "5ms" "7ms" "10ms" "15ms" "20ms" "30ms" "40ms")
 
-bandwidth=("100Mbps" "150Mbps" "10Mbps" "20Mbps" )
+bandwidth=("100Mbps" "10Mbps" "20Mbps" "5Mbps" "150Mbps")
 delay=("0ms" "5ms" "10ms" "20ms")
 
 # bandwidth=("10Mbps" "5Mbps")
