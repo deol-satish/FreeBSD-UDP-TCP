@@ -13,8 +13,8 @@ aqm_schemes=("dualpi2")
 bandwidth=("100Mbps" "10Mbps" "20Mbps" "5Mbps" "150Mbps")
 delay=("0ms" "5ms" "10ms" "20ms")
 
-bandwidth=("200Mbps" "250Mbps")
-delay=("0ms" "5ms" "10ms" "20ms")
+bandwidth=("8Mbps")
+delay=("10ms")
 
 ecn=("ecn")
 
@@ -23,7 +23,7 @@ tcp_ecn_enable=1
 dctcp_ect1=1
 
 # Set test duration (60 seconds) and wait time
-duration=90
+duration=120
 end_wait_time=10
 
 # Access to VMs and router
@@ -54,4 +54,4 @@ sshkeypath="$HOME/.ssh/mptcprootkey"
 vmhostaddr="192.168.56.1"
 
 # Number of iterations to run (10 times)
-iterations=2
+iterations=3

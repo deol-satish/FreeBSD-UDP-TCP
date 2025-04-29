@@ -84,7 +84,7 @@ run_test() {
                     # #UDP Test Start
                     run_udp_test "$iter" "$aqm" "$bw" "$d" "$e"    
                     
-                    simplified_data_download   
+                    udp_simplified_data_download   
 
                     sleep 2
 

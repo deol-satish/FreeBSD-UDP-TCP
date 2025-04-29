@@ -1,13 +1,13 @@
 #!/bin/bash
 
-data_download() {
+tcp_simplified_data_download() {
     echo "Starting downloading data"
 
     # Generate timestamp
-    timestamp=$(date +"%Y-%m-%d-%H-%M-%S")
+    timestamp=$(date +"%Y-%m-%d")
 
     # Create main directory with timestamp
-    base_dir="./data/data_${timestamp}"
+    base_dir="./data/tcp_data_${timestamp}"
     mkdir -p "$base_dir/server_data"
     mkdir -p "$base_dir/client1_data"
     mkdir -p "$base_dir/client2_data"
@@ -42,8 +42,7 @@ data_download() {
     echo "Data download complete. Files are saved in $base_dir"
 }
 
-
-simplified_data_download() {
+udp_simplified_data_download() {
     echo "Starting downloading data"
 
     # Generate timestamp

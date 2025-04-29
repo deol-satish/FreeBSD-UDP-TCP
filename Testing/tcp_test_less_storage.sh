@@ -83,7 +83,7 @@ run_test() {
                     # run_udp_test "$iter" "$aqm" "$bw" "$d" "$e"  
                     echo "===================================================================="   
 
-                    simplified_data_download   
+                    tcp_simplified_data_download   
 
                     sleep 2
 
