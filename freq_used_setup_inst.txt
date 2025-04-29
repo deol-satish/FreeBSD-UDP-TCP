@@ -33,3 +33,5 @@ You can adjust settings such as file size limits, rotation frequency, and how ma
 sudo truncate -s 0 /var/log/messages --- to clear messages file
 sudo service syslogd restart --- restart the syslog service to make sure it's working properly
 ==============================================================================================================================
+git log --oneline
+

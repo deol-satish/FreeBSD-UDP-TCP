@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # TCP variants
-tcp1="cubic"
-tcp2="dctcp"
+tcp1="dctcp"
+tcp2="cubic"
 
 # AQM schemes
 aqm_schemes=("dualpi2")

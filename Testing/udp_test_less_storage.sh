@@ -47,7 +47,7 @@ run_udp_test() {
     start_log "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
     # server_iperf3_script "$iter"
     # server_iperf3_script
-    cused_udp_client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
+    udp_client_iperf3_script "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
     end_log
     kill_server_iperf3_script
     kernel_data_create "$iter" "$aqm" "$bw" "$d" "$e" "$protocol"
