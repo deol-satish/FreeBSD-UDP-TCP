@@ -3,6 +3,13 @@ import pandas as pd
 import os
 import csv
 import sys
+import logging
+
+# Set logging to DEBUG level
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 
 def extract_udp_prague_to_dataframe(input_txt_file):
@@ -88,5 +95,5 @@ def extract_udp_prague_log_to_csv(input_txt_file, output_csv_file=None):
         writer.writerow(headers)
         writer.writerows(extracted_data)
 
-    print(f"✅ Data extracted to: {output_csv_file}")
+    print(f"Data extracted to: {output_csv_file}")
 

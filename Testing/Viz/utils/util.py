@@ -2,6 +2,13 @@ import os
 import pandas as pd
 from utils.config import siftr_col
 import re
+import logging
+
+# Set logging to DEBUG level
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 def find_files_with_extension(paths=['./'], extension='.log'):
     file_paths = []
@@ -19,6 +26,35 @@ def find_files_with_extension(paths=['./'], extension='.log'):
 
 
     return file_names, file_paths, file_dict
+
+def filter_strings_by_substrings(strings, sub_strings):
+    result = []
+    for s in strings:
+        if all(sub in s for sub in sub_strings):
+            result.append(s)
+    return result
+
+def get_scenario_dict(folderpaths):
+    filenames, filepaths, filedict = find_files_with_extension(folderpaths, '')
+    # Call the function and print unique combinations
+    unique_combinations = extract_unique_mbps_and_ms(folderpaths)
+    print("Unique Mbps and ms Combinations:")
+    for mbps, ms in sorted(unique_combinations):
+        print(f'{mbps} Mbps, {ms} ms')
+
+
+    unique_scenarios_dict = {}
+    for mbps, ms in unique_combinations:
+        scenario_search = f"{mbps}Mbps_{ms}ms"
+        for index in range(len(filenames)):
+            if scenario_search in filenames[index]:
+                print(f"Found {scenario_search} in {filenames[index]}")
+                if scenario_search in unique_scenarios_dict:
+                    unique_scenarios_dict[scenario_search].append(filedict[filenames[index]])
+                else:
+                    unique_scenarios_dict[scenario_search]=[filedict[filenames[index]]]
+    return unique_scenarios_dict
+                
 
 def print_rtt_stats(paths,scenario):
     print()
